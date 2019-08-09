@@ -5,18 +5,19 @@ import AccountsPassword from '@accounts/password'
 import AccountsServer from '@accounts/server'
 import { mergeResolvers, mergeTypeDefs } from 'graphql-toolkit'
 */
-// import { Mongo } from '@accounts/mongo'
-// import db from '../server'
-
-import initialState from '../requests'
-import {
+// import MongoDBInterface from '@accounts/mongo'
+const db = require('./server')
+const initialState = require('./requests')
+// import initialState from '../requests'
+const {
   GraphQLDate,
   GraphQLDateTime
-} from 'graphql-iso-date'
+} = require('graphql-iso-date')
 const {
   ApolloServer,
   gql
 } = require('apollo-server-lambda')
+
 
 const typeDefs = gql`
   scalar Date
