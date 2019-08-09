@@ -36,6 +36,7 @@
     "moment": "^2.24.0",
     "mongodb": "^3.3.0-beta2",
     "mongoose": "^5.6.9",
+    "npm-run-all": "^4.1.5",
     "react": "^16.9.0",
     "react-big-calendar": "^0.22.0",
     "react-dom": "^16.9.0",
