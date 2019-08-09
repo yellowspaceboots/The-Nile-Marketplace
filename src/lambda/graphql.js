@@ -6,7 +6,7 @@ import AccountsServer from '@accounts/server'
 import { mergeResolvers, mergeTypeDefs } from 'graphql-toolkit'
 */
 // import { Mongo } from '@accounts/mongo'
-import db from './server'
+// import db from '../server'
 
 import initialState from '../requests'
 import {
