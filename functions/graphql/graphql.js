@@ -8,7 +8,6 @@ import { mergeResolvers, mergeTypeDefs } from 'graphql-toolkit'
 // import MongoDBInterface from '@accounts/mongo'
 const db = require('./server')
 const initialState = require('./requests')
-// import initialState from '../requests'
 const {
   GraphQLDate,
   GraphQLDateTime
@@ -17,7 +16,6 @@ const {
   ApolloServer,
   gql
 } = require('apollo-server-lambda')
-
 
 const typeDefs = gql`
   scalar Date
