@@ -3,7 +3,7 @@ const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() 
 const initialState = [
   {
     id: 0,
-    title: 'My testing project name',
+    title: 'My testing project name testing',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
