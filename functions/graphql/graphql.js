@@ -6,7 +6,7 @@ import AccountsServer from '@accounts/server'
 import { mergeResolvers, mergeTypeDefs } from 'graphql-toolkit'
 */
 // import MongoDBInterface from '@accounts/mongo'
-const db = require('./server')
+// const db = require('./server')
 const initialState = require('./requests')
 const {
   GraphQLDate,
