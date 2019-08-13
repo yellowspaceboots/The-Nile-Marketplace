@@ -1,231 +1,25 @@
-/*
-import { DatabaseManager } from '@accounts/database-manager'
-import AccountsModule from '@accounts/graphql-api'
-import AccountsPassword from '@accounts/password'
-import AccountsServer from '@accounts/server'
-import { mergeResolvers, mergeTypeDefs } from 'graphql-toolkit'
-*/
-// import MongoDBInterface from '@accounts/mongo'
-// const db = require('./server')
-// const initialState = require('./requests')
+const { DatabaseManager } = require('@accounts/database-manager')
+const { AccountsModule } = require('@accounts/graphql-api')
+const { AccountsPassword } = require('@accounts/password')
+const { AccountsServer } = require('@accounts/server')
+const {
+  mergeResolvers,
+  mergeTypeDefs
+} = require('graphql-toolkit')
+const { Mongo } = require('@accounts/mongo')
+const db = require('./server')
+const initialState = require('./requests')
 const {
   GraphQLDate,
   GraphQLDateTime
 } = require('graphql-iso-date')
 const {
   ApolloServer,
-  gql
+  gql,
+  makeExecutableSchema
 } = require('apollo-server-lambda')
 
-const today = new Date()
-const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
-const initialState = [
-  {
-    id: 0,
-    title: 'My testing project name testing',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk',
-      'Merit Electric'
-    ]
-  },
-  {
-    id: 1,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Pending',
-    customers: [
-      'Fisk'
-    ]
-  },
-  {
-    id: 2,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Lost',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 3,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Won',
-    customers: [
-      'Britain Electric'
-    ]
-  },
-  {
-    id: 4,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Fisk'
-    ]
-  },
-  {
-    id: 5,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 6,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Fisk'
-    ]
-  },
-  {
-    id: 7,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric'
-    ]
-  },
-  {
-    id: 8,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 9,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 10,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 11,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 12,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 13,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 14,
-    title: 'My testing project name',
-    start: today,
-    end: endDate,
-    salesman: 'Jon Busch',
-    amount: '90,000.00',
-    status: 'Open',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  },
-  {
-    id: 15,
-    title: 'My testing project name that\'s is really really long',
-    start: today,
-    end: endDate,
-    salesman: 'Tex Tarango',
-    amount: '900.00',
-    status: 'Won',
-    customers: [
-      'Britain Electric',
-      'Fisk'
-    ]
-  }
-]
-
+/*
 const typeDefs = gql`
   scalar Date
   scalar DateTime
@@ -270,7 +64,6 @@ const server = new ApolloServer({
 
 exports.handler = server.createHandler()
 
-/*
 const userStorage = new Mongo(db)
 // Create database manager (create user, find users, sessions etc) for accounts-js
 const accountsDb = new DatabaseManager({
@@ -404,20 +197,22 @@ export async function handler (event, context, callback) {
     }
   }
 }
-
-/*
-const runHandler = (event, context, handler) => (
-  new Promise((resolve, reject) => {
-    const callback = (error, body) => (error ? reject(error) : resolve(body))
+*/
+const runHandler = function (event, context, handler) {
+  return new Promise(function (resolve, reject) {
+    var callback = function (error, body) {
+      return error ? reject(error) : resolve(body)
+    }
 
     handler(event, context, callback)
-  }))
+  })
+}
 
-const run = async (event, context) => {
+const run = async function (event, context) {
   context.callbackWaitsForEmptyEventLoop = false
 
   // Build a storage for storing users
-  const userStorage = new Mongo(db)
+  const userStorage = new Mongo(await db)
   // Create database manager (create user, find users, sessions etc) for accounts-js
   const accountsDb = new DatabaseManager({
     sessionStorage: userStorage,
@@ -427,7 +222,7 @@ const run = async (event, context) => {
   const accountsPassword = new AccountsPassword({
     // This option is called when a new user create an account
     // Inside we can apply our logic to validate the user fields
-    validateNewUser: user => {
+    validateNewUser: function (user) {
       // For example we can allow only some kind of emails
       if (user.email.endsWith('.xyz')) {
         throw new Error('Invalid email')
@@ -497,25 +292,37 @@ const run = async (event, context) => {
     Date: GraphQLDate,
     DateTime: GraphQLDateTime,
     Query: {
-      hello: () => 'Hello world!',
-      testing: () => {
+      hello: function () {
+        return 'Hello world!'
+      },
+      testing: function () {
         return 'testing'
       },
-      getRequest: (obj, args, context) => {
-        const result = initialState.filter(result => result.id === args.id)[0]
+      getRequest: function (obj, args, context) {
+        var result = initialState.filter(function (result) {
+          return result.id === args.id
+        })[0]
         return result
       },
-      getRequests: () => {
+      getRequests: function () {
         return initialState
       },
-      publicField: () => 'public',
-      privateField: () => 'private',
-      privateType: () => ({
-        field: () => 'private'
-      })
+      publicField: function () {
+        return 'public'
+      },
+      privateField: function () {
+        return 'private'
+      },
+      privateType: function () {
+        return {
+          field: function () {
+            return 'private'
+          }
+        }
+      }
     },
     Mutation: {
-      addEvent: () => {
+      addEvent: function () {
         return 'testing'
       }
     }
@@ -543,4 +350,3 @@ const run = async (event, context) => {
 }
 
 exports.handler = run
-*/
