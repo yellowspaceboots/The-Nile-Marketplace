@@ -16,6 +16,7 @@
     "@accounts/password": "^0.17.0",
     "@accounts/server": "^0.17.0",
     "apollo-server-lambda": "^2.8.1",
+    "graphql": "^14.4.2",
     "graphql-iso-date": "^3.6.1",
     "graphql-toolkit": "^0.5.8",
     "mongodb": "^3.3.0-beta2",
