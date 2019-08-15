@@ -46,6 +46,7 @@
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "reflect-metadata": "^0.1.13",
     "utf-8-validate": "^5.0.2"
   },
   "scripts": {
