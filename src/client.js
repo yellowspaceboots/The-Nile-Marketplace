@@ -14,16 +14,8 @@ const httpLink = new HttpLink({
 })
 const cache = new InMemoryCache()
 
-const graphQLApolloClient = new ApolloClient({
-  link: ApolloLink.from([httpLink]),
-  cache
-})
-
-const accountsGraphQL = new GraphQLClient({ graphQLClient: graphQLApolloClient })
-const accountsClient = () => new AccountsClient({}, accountsGraphQL)
-const accountsPassword = new AccountsClientPassword(accountsClient)
-
-const authLink = accountsLink(accountsClient)
+const authLink = accountsLink(() => accountsClient)
+// const authLink = accountsLink(accountsClient)
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -43,4 +35,10 @@ const client = new ApolloClient({
   cache
 })
 
-export { client, accountsPassword }
+const accountsGraphQL = new GraphQLClient({ graphQLClient: client })
+const accountsClient = new AccountsClient({}, accountsGraphQL)
+const accountsPassword = new AccountsClientPassword(accountsClient, {
+  hashPassword: (password) => password
+})
+
+export { client, accountsPassword, accountsGraphQL, accountsClient }
