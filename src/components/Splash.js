@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -10,9 +10,9 @@ import Grid from '@material-ui/core/Grid'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
-import { accountsPassword, accountsClient, accountsGraphQL } from '../client'
+import { accountsPassword, accountsGraphQL } from '../client'
 import { withRouter } from 'react-router'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
@@ -45,19 +45,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }))
-const LOGIN = gql`
-mutation ($serviceName: String!, $params: AuthenticateParamsInput!) {
-  authenticate(serviceName: $serviceName, params: $params) {
-    sessionId
-    tokens {
-      refreshToken
-      accessToken
-      __typename
-    }
-    __typename
-  }
-}
-`
+
 const GET_USER = gql`
 query {
   getUser {
@@ -77,6 +65,7 @@ const Splash = ({ login, history }) => {
   const { loading, error, data: { getUser } } = useQuery(GET_USER)
   if (loading) return 'Loading...'
   if (error) return `Error! ${error.message}`
+  console.log(user)
   return (
     <Grid container component='main' className={classes.root}>
       <Grid item xs={false} sm={4} md={7} className={classes.image} />

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const dotenv = require('dotenv').config()
 // Initialize connection to database
-const dbUrl = process.env.DB_URL
+const dbUrl = process.env.DB_URL_DEV
 /*
 const dbOptions = {
   useNewUrlParser: true
