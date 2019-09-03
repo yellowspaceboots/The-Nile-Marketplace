@@ -164,7 +164,6 @@ const Splash = ({ login, history }) => {
             >
               Test Login Mutation
             </Button>
-            */}
             <Grid container>
               <Grid item xs>
                 <Link href='#' variant='body2'>
@@ -172,6 +171,7 @@ const Splash = ({ login, history }) => {
                 </Link>
               </Grid>
             </Grid>
+          */}
             <p>{mutationError}</p>
             {getUser && <p>{getUser.emails[0].address}</p>}
           </form>

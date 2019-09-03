@@ -1,15 +1,7 @@
 const mongoose = require('mongoose')
-// const mongodb = require('mongodb')
 
-const dotenv = require('dotenv').config()
-// Initialize connection to database
-const dbUrl = process.env.DB_URL
-/*
-const dbOptions = {
-  useNewUrlParser: true
-}
-const db = mongodb.MongoClient.connect(dbUrl, dbOptions)
-*/
+const dbUrl = process.env.DB_URL_DEV
+
 const dbOptions = {
   useNewUrlParser: true,
   useFindAndModify: false,
