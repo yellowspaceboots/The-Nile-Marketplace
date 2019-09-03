@@ -19,7 +19,7 @@ const {
   makeExecutableSchema
 } = require('apollo-server-lambda')
 const { v1: neo4j } = require('neo4j-driver')
-const { augmentSchema } = require('neo4j-graphql-js')
+// const { makeAugmentedSchema } = require('neo4j-graphql-js')
 
 const runHandler = function (event, context, handler) {
   return new Promise(function (resolve, reject) {
@@ -151,16 +151,16 @@ const run = async function (event, context) {
     }
   }
 
-  const schemaNoNeo = makeExecutableSchema({
+  const schema = makeExecutableSchema({
     typeDefs: mergeTypeDefs([typeDefs, accountsGraphQL.typeDefs]),
     resolvers: mergeResolvers([accountsGraphQL.resolvers, resolvers]),
     schemaDirectives: {
       ...accountsGraphQL.schemaDirectives
     }
   })
-/*
-  const schema = augmentSchema({
-    schema: schemaNoNeo
+  /*
+  const schema = makeAugmentedSchema({
+    typeDefs: schemaNoNeo
   })
 */
   const driver = neo4j.driver(
@@ -174,7 +174,7 @@ const run = async function (event, context) {
   // Create the Apollo Server that takes a schema and configures internal stuff
   const server = new ApolloServer({
     context: { ...accountsGraphQL.context, ...driver },
-    schema: schemaNoNeo,
+    schema,
     introspection: true,
     playground: true
   })
