@@ -9,12 +9,10 @@ const {
 const { Mongo } = require('@accounts/mongo')
 const db = require('./server')
 const initialState = require('./requests')
-/*
 const {
   GraphQLDate,
   GraphQLDateTime
 } = require('graphql-iso-date')
-*/
 const {
   ApolloServer,
   gql,
@@ -114,6 +112,8 @@ const run = async function (event, context) {
     }
   `
   const resolvers = {
+    Date: GraphQLDate,
+    DateTime: GraphQLDateTime,
     Query: {
       hello: function () {
         return 'Hello world!'
@@ -151,7 +151,7 @@ const run = async function (event, context) {
     }
   }
 
-  const schema = makeExecutableSchema({
+  const schemaNoNeo = makeExecutableSchema({
     typeDefs: mergeTypeDefs([typeDefs, accountsGraphQL.typeDefs]),
     resolvers: mergeResolvers([accountsGraphQL.resolvers, resolvers]),
     schemaDirectives: {
@@ -159,7 +159,9 @@ const run = async function (event, context) {
     }
   })
 /*
-  const schema = augmentSchema(schemaNoNeo)
+  const schema = augmentSchema({
+    schema: schemaNoNeo
+  })
 */
   const driver = neo4j.driver(
     process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -169,17 +171,10 @@ const run = async function (event, context) {
     )
   )
 
-  const accountContext = accountsGraphQL.context
-
   // Create the Apollo Server that takes a schema and configures internal stuff
   const server = new ApolloServer({
-    context: function () {
-      return {
-        accountContext,
-        driver
-      }
-    },
-    schema,
+    context: { ...accountsGraphQL.context, ...driver },
+    schema: schemaNoNeo,
     introspection: true,
     playground: true
   })
