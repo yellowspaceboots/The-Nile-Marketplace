@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Typography from '@material-ui/core/Typography'
-import { accountsGraphQL } from '../client'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+// import { accountsGraphQL } from '../client'
+// import TextField from '@material-ui/core/TextField'
+// import Button from '@material-ui/core/Button'
 
 const Account = ({ title, ...props }) => {
+  /*
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -25,11 +26,13 @@ const Account = ({ title, ...props }) => {
       setMutationError(err.message)
     }
   }
+  */
   return (
     <React.Fragment>
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>
         {title}
       </Typography>
+      {/*
       <TextField
         variant='outlined'
         margin='normal'
@@ -83,6 +86,8 @@ const Account = ({ title, ...props }) => {
               Test
       </Button>
       <p>{mutationError}</p>
+      */}
+
     </React.Fragment>
   )
 }
