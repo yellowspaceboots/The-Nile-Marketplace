@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, lazy } from 'react'
+import React, { Suspense, useState, useEffect } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Splash from './components/Splash'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -9,8 +9,7 @@ import MomentUtils from '@date-io/moment'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { client, accountsClient, accountsGraphQL } from './client'
-
-const Layout = lazy(() => import('./components/Layout'))
+import Layout from './components/Layout'
 
 const theme = createMuiTheme({
   palette: {
