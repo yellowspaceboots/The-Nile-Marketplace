@@ -33,6 +33,7 @@ const AuthenticatedApp = withRouter(({ history }) => {
   const [user, setUser] = useState()
   useEffect(() => {
     fetchUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const fetchUser = async () => {
     // refresh the session to get a new accessToken if expired
