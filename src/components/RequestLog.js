@@ -38,16 +38,6 @@ const RequestLog = ({ title }) => {
   const [logDialogOpen, setLogDialogOpen] = useState(false)
   const [filter, toggleFilter] = useState(false)
   const [salesDialogOpen, setSalesDialogOpen] = useState(false)
-  const [status, setStatus] = useState([])
-  function handleChange (event) {
-    setStatus(event.target.value)
-  }
-  const statuses = [
-    'Open',
-    'Pending',
-    'Won',
-    'Lost'
-  ]
   const { loading, data: { getRequests }, error } = useQuery(GET_REQUESTS)
   if (error) { return <div>Error! {error.message}</div> }
   if (loading) { return <CircularProgress /> }

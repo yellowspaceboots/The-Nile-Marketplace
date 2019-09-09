@@ -87,7 +87,7 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
   const handleDateChange = (name, value) => {
     setDateValues({ ...dateValues, [name]: value })
   }
-  const [addEvent, { data }] = useMutation(ADD_EVENT, {
+  const [addEvent] = useMutation(ADD_EVENT, {
     refetchQueries: ['getRequestsQuery']
   })
   const customerNoKeyAccount = customers.filter(customer => customer.keyAccountId === 'UNDEFINED')

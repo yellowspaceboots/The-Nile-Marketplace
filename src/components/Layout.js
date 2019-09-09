@@ -20,7 +20,7 @@ import ListItemLink from './ListItemLink'
 import { Link } from 'react-router-dom'
 import WidgetsIcon from '@material-ui/icons/Widgets'
 import SettingsIcon from '@material-ui/icons/Settings'
-import initialState from './requests'
+// import initialState from './requests'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import HomeIcon from '@material-ui/icons/Home'
 import NestedNavigation from './NestedNavigation'
@@ -136,7 +136,7 @@ const Layout = ({ history, ...props }) => {
   const { container } = props
   const classes = useStyles()
   const theme = useTheme()
-  const openRequestCount = initialState.filter(request => request.status === 'Open' || request.status === 'Pending').length
+  // const openRequestCount = initialState.filter(request => request.status === 'Open' || request.status === 'Pending').length
   const [mobileOpen, setMobileOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const notificationClick = (event) => {
