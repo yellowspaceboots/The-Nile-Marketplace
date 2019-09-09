@@ -25,10 +25,10 @@ const GET_REQUESTS = gql`
 const localizer = momentLocalizer(moment)
 
 const ProjectsCalendar = props => {
-  const { loading, data: { getRequests }, error } = useQuery(GET_REQUESTS)
+  const { loading, data, error } = useQuery(GET_REQUESTS)
   if (error) { return <div>Error! {error.message}</div> }
   if (loading) { return <CircularProgress /> }
-  const requestsWithDate = getRequests.map(event => ({ ...event, end: new Date(event.end), title: `Bid due for ${event.title}` }))
+  const requestsWithDate = data.getRequests.map(event => ({ ...event, end: new Date(event.end), title: `Bid due for ${event.title}` }))
   return (
     <React.Fragment>
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>

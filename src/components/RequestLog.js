@@ -38,9 +38,10 @@ const RequestLog = ({ title }) => {
   const [logDialogOpen, setLogDialogOpen] = useState(false)
   const [filter, toggleFilter] = useState(false)
   const [salesDialogOpen, setSalesDialogOpen] = useState(false)
-  const { loading, data: { getRequests }, error } = useQuery(GET_REQUESTS)
-  if (error) { return <div>Error! {error.message}</div> }
+  const { loading, data, error } = useQuery(GET_REQUESTS)
   if (loading) { return <CircularProgress /> }
+  if (error) { return <div>Error! {error.message}</div> }
+  const getRequests = data.getRequests
   return (
     <React.Fragment>
       <LogDialog open={logDialogOpen} setDialogOpen={setLogDialogOpen} addEvent={() => console.log('placeholder')} />

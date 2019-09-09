@@ -26,9 +26,10 @@ const GET_REQUEST = gql`
 
 const Request = ({ title, match, ...props }) => {
   const id = match.params.id
-  const { loading, data: { getRequest }, error } = useQuery(GET_REQUEST, { variables: { id } })
-  if (error) { return <div>Error! {error.message}</div> }
+  const { loading, data, error } = useQuery(GET_REQUEST, { variables: { id } })
   if (loading) { return <CircularProgress /> }
+  if (error) { return <div>Error! {error.message}</div> }
+  const getRequest = data.getRequest
   return (
     <React.Fragment>
       <div style={{ display: 'flex', alignItems: 'center' }}>
