@@ -9,9 +9,10 @@ import CardContent from '@material-ui/core/CardContent'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 const GET_REQUEST = gql`
-  query getRequestQuery($id: Int!) {
+  query getRequestQuery($id: ID!) {
     getRequest(id: $id) {
-      id
+      _id
+      requestId
       title
       start
       end
@@ -24,7 +25,7 @@ const GET_REQUEST = gql`
 `
 
 const Request = ({ title, match, ...props }) => {
-  const id = parseInt(match.params.id)
+  const id = match.params.id
   const { loading, data: { getRequest }, error } = useQuery(GET_REQUEST, { variables: { id } })
   if (error) { return <div>Error! {error.message}</div> }
   if (loading) { return <CircularProgress /> }
@@ -32,7 +33,7 @@ const Request = ({ title, match, ...props }) => {
     <React.Fragment>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant='overline' color='textSecondary' style={{ marginRight: 10, fontWeight: 600 }}>
-          {title} {id}
+          {title} {getRequest.requestId}
         </Typography>
         <StatusChip status={getRequest.status} />
       </div>

@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-// import Link from '@material-ui/core/Link'
+import Link from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -12,8 +12,6 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { accountsPassword, accountsGraphQL } from '../client'
 import { withRouter } from 'react-router'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,25 +44,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const GET_USER = gql`
-query {
-  getUser {
-    username
-    emails {
-      address
-    }
-  }
-}
-`
-const Splash = ({ login, history }) => {
+const Splash = ({ history }) => {
   const [user, setUser] = useState()
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [mutationError, setMutationError] = useState('')
   const classes = useStyles()
-  const { loading, error, data: { getUser } } = useQuery(GET_USER)
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
   console.log(user)
   return (
     <Grid container component='main' className={classes.root}>
@@ -107,19 +92,6 @@ const Splash = ({ login, history }) => {
               label='Remember me'
             />
             <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}
-              onClick={() => {
-                history.push('/')
-                login(true)
-              }}
-            >
-              Sign In
-            </Button>
-            <Button
               fullWidth
               variant='contained'
               color='primary'
@@ -134,35 +106,14 @@ const Splash = ({ login, history }) => {
                     password
                   })
                   const accountsUser = await accountsGraphQL.getUser()
-                  console.log(accountsUser)
                   setUser(accountsUser)
+                  history.push('/')
                 } catch (err) {
                   setMutationError(err.message)
                 }
               }}
             >
-              Test Login Function
-            </Button>
-            {/*
-            <Button
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}
-              onClick={() =>
-                loginMutation({
-                  variables: {
-                    serviceName: 'password',
-                    params: {
-                      user: {
-                        email
-                      },
-                      password
-                    }
-                  }
-                })}
-            >
-              Test Login Mutation
+              Sign In
             </Button>
             <Grid container>
               <Grid item xs>
@@ -171,9 +122,7 @@ const Splash = ({ login, history }) => {
                 </Link>
               </Grid>
             </Grid>
-          */}
             <p>{mutationError}</p>
-            {getUser && <p>{getUser.emails[0].address}</p>}
           </form>
         </div>
       </Grid>

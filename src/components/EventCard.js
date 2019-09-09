@@ -14,7 +14,8 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import { Link } from 'react-router-dom'
 
 const EventCard = ({ event, setEditId, setLogDialogOpen }) => {
-  const renderLink = React.forwardRef((itemProps, ref) => <Link to={`/commercial-projects/request-log/${event.id}`} {...itemProps} ref={ref} />)
+  const renderLink = React.forwardRef((itemProps, ref) => <Link to={`/commercial-projects/request-log/${event._id}`} {...itemProps} ref={ref} />)
+  const initials = event.salesman.split(' ').map((n) => n[0]).join('')
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card style={{ height: '100%' }}>
@@ -22,16 +23,21 @@ const EventCard = ({ event, setEditId, setLogDialogOpen }) => {
           <CardHeader
             avatar={
               <Avatar aria-label='recipe'>
-            W
+                {initials}
               </Avatar>
             }
             title={event.title}
-            subheader={`request#: ${event.id} added ${moment(event.start).format('MMM DD h:mm A')}`}
+            subheader={`request#: ${event.requestId}`}
           />
           <CardContent style={{ paddingTop: 0 }}>
-            <Typography variant='body2' color='textSecondary' component='p'>
-          Due {moment(event.end).fromNow()}
-            </Typography>
+            <div style={{ marginLeft: 55 }}>
+              <Typography variant='body2' color='textSecondary' component='p'>
+          Added {moment(event.start).fromNow()}
+              </Typography>
+              <Typography variant='body2' color='textSecondary' component='p'>
+          Due {moment(event.end).fromNow()} at {moment(event.end).format('hh:mm:ss A')}
+              </Typography>
+            </div>
             <Divider style={{ marginTop: 20, marginBottom: 20 }} />
             <div style={{ display: 'flex' }}>
               <div style={{ flexGrow: 1 }}>
@@ -54,9 +60,11 @@ const EventCard = ({ event, setEditId, setLogDialogOpen }) => {
               </div>
               <div>
                 <NumberFormat
-                  value={event.amount}
+                  value={event.amount / 100}
                   displayType={'text'}
                   thousandSeparator
+                  fixedDecimalScale
+                  decimalScale={2}
                   prefix={'$'}
                   renderText={
                     value => (

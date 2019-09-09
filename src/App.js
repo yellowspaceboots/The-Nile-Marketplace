@@ -1,14 +1,16 @@
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useState, useEffect, lazy } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Splash from './components/Splash'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { createMuiTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/styles'
-import Layout from './components/Layout'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { client } from './client'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router'
+import { client, accountsClient, accountsGraphQL } from './client'
+
+const Layout = lazy(() => import('./components/Layout'))
 
 const theme = createMuiTheme({
   palette: {
@@ -27,17 +29,49 @@ const theme = createMuiTheme({
   }
 })
 
+const AuthenticatedApp = withRouter(({ history }) => {
+  const [user, setUser] = useState()
+  useEffect(() => {
+    fetchUser()
+  }, [])
+  const fetchUser = async () => {
+    // refresh the session to get a new accessToken if expired
+    const tokens = await accountsClient.refreshSession()
+    if (!tokens) {
+      history.push('/login')
+    } else {
+      const accountsUser = await accountsGraphQL.getUser()
+      setUser(accountsUser)
+      if (history.location.pathname === '/login') {
+        history.push('/')
+      }
+    }
+  }
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+    <Switch>
+      <Route
+        exact
+        path='/login'
+        render={(props) => <Splash {...props} />}
+      />
+      <Route
+        path='/'
+        render={(props) => <Layout {...props} />}
+      />
+    </Switch>
+    </Suspense>
+  )
+})
+
 const App = () => {
-  const [loggedIn, login] = useState(false)
   return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <ApolloProvider client={client}>
           <Router>
             <CssBaseline />
-            <Suspense fallback={<div>Loading...</div>}>
-              { loggedIn ? <Layout login={login} /> : <Splash login={login} /> }
-            </Suspense>
+            <AuthenticatedApp />
           </Router>
         </ApolloProvider>
       </MuiPickersUtilsProvider>

@@ -2,12 +2,12 @@ const today = new Date()
 const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7)
 const initialState = [
   {
-    id: 0,
+    requestId: 0,
     title: 'My testing project name testing to see if this works.',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -16,24 +16,24 @@ const initialState = [
     ]
   },
   {
-    id: 1,
+    requestId: 1,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Pending',
     customers: [
       'Fisk'
     ]
   },
   {
-    id: 2,
+    requestId: 2,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Lost',
     customers: [
       'Britain Electric',
@@ -41,36 +41,36 @@ const initialState = [
     ]
   },
   {
-    id: 3,
+    requestId: 3,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Won',
     customers: [
       'Britain Electric'
     ]
   },
   {
-    id: 4,
+    requestId: 4,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Fisk'
     ]
   },
   {
-    id: 5,
+    requestId: 5,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -78,36 +78,36 @@ const initialState = [
     ]
   },
   {
-    id: 6,
+    requestId: 6,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Fisk'
     ]
   },
   {
-    id: 7,
+    requestId: 7,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Open',
     customers: [
       'Britain Electric'
     ]
   },
   {
-    id: 8,
+    requestId: 8,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -115,12 +115,12 @@ const initialState = [
     ]
   },
   {
-    id: 9,
+    requestId: 9,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -128,12 +128,12 @@ const initialState = [
     ]
   },
   {
-    id: 10,
+    requestId: 10,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -141,12 +141,12 @@ const initialState = [
     ]
   },
   {
-    id: 11,
+    requestId: 11,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -154,12 +154,12 @@ const initialState = [
     ]
   },
   {
-    id: 12,
+    requestId: 12,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -167,12 +167,12 @@ const initialState = [
     ]
   },
   {
-    id: 13,
+    requestId: 13,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -180,12 +180,12 @@ const initialState = [
     ]
   },
   {
-    id: 14,
+    requestId: 14,
     title: 'My testing project name',
     start: today,
     end: endDate,
     salesman: 'Jon Busch',
-    amount: '90,000.00',
+    amount: 9000000,
     status: 'Open',
     customers: [
       'Britain Electric',
@@ -193,12 +193,12 @@ const initialState = [
     ]
   },
   {
-    id: 15,
+    requestId: 15,
     title: 'My testing project name that\'s is really really long',
     start: today,
     end: endDate,
     salesman: 'Tex Tarango',
-    amount: '900.00',
+    amount: 90000,
     status: 'Won',
     customers: [
       'Britain Electric',

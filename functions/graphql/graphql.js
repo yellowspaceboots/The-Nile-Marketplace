@@ -8,7 +8,6 @@ const {
 } = require('graphql-toolkit')
 const { Mongo } = require('@accounts/mongo')
 const db = require('./server')
-const initialState = require('./requests')
 const {
   GraphQLDate,
   GraphQLDateTime
@@ -18,7 +17,9 @@ const {
   gql,
   makeExecutableSchema
 } = require('apollo-server-lambda')
-const { v1: neo4j } = require('neo4j-driver')
+const requestSchema = require('./models/requests')
+const shortid = require('shortid')
+// const { v1: neo4j } = require('neo4j-driver')
 // const { makeAugmentedSchema } = require('neo4j-graphql-js')
 
 const runHandler = function (event, context, handler) {
@@ -56,7 +57,7 @@ const run = async function (event, context) {
 
   // Create accounts server that holds a lower level of all accounts operations
   const accountsServer = new AccountsServer(
-    { db: accountsDb, tokenSecret: 'davidissilly' },
+    { db: accountsDb, tokenSecret: process.env.JWT_SECRET },
     {
       password: accountsPassword
     }
@@ -66,6 +67,9 @@ const run = async function (event, context) {
   const accountsGraphQL = AccountsModule.forRoot({
     accountsServer
   })
+
+  db.model('Requests', requestSchema)
+  const Requests = db.model('Requests')
 
   const typeDefs = gql`
     scalar Date
@@ -78,11 +82,14 @@ const run = async function (event, context) {
       profile: CreateUserProfileInput!
     }
     input EventInput {
-      title: String!
-      start: DateTime!
-      end: DateTime!
-      salesman: String!
-      amount: Float!
+      title: String
+      start: DateTime
+      end: DateTime
+      salesman: String
+      amount: Int
+      status: String
+      size: String
+      customers: [String]
     }
     input CreateUserProfileInput {
       firstName: String!
@@ -91,22 +98,24 @@ const run = async function (event, context) {
     type Query {
       hello: String
       testing: String
-      getRequest(id: Int!): Request
+      getRequest(id: ID!): Request
       getRequests: [Request]
       publicField: String
       privateField: String @auth
       privateType: PrivateType
     }
     type Mutation {
-      addEvent(event: EventInput!): String
+      addEvent(event: EventInput!): Request
     }
     type Request {
-      id: Int
+      _id: ID
+      requestId: String
       title: String
       start: DateTime
       end: DateTime
       salesman: String
-      amount: String
+      amount: Int
+      size: String
       status: String
       customers: [String]
     }
@@ -121,14 +130,11 @@ const run = async function (event, context) {
       testing: function () {
         return 'testing'
       },
-      getRequest: function (obj, args, context) {
-        var result = initialState.filter(function (result) {
-          return result.id === args.id
-        })[0]
-        return result
+      getRequest: async function (obj, args, context) {
+        return Requests.findOne({ _id: args.id })
       },
-      getRequests: function () {
-        return initialState
+      getRequests: async function () {
+        return Requests.find({}).limit(10).sort([['start', -1]])
       },
       publicField: function () {
         return 'public'
@@ -145,8 +151,9 @@ const run = async function (event, context) {
       }
     },
     Mutation: {
-      addEvent: function () {
-        return 'testing'
+      addEvent: async function (obj, args, context) {
+        const Request = new Requests({ ...args.event, requestId: shortid.generate() })
+        return Request.save()
       }
     }
   }
@@ -160,9 +167,12 @@ const run = async function (event, context) {
   })
   /*
   const schema = makeAugmentedSchema({
-    typeDefs: schemaNoNeo
+    typeDefs: schemaNoNeo,
+    config: {
+      temporal: false
+    }
   })
-*/
+
   const driver = neo4j.driver(
     process.env.NEO4J_URI || 'bolt://localhost:7687',
     neo4j.auth.basic(
@@ -170,10 +180,10 @@ const run = async function (event, context) {
       process.env.NEO4J_PASSWORD || 'neo4j'
     )
   )
-
+  */
   // Create the Apollo Server that takes a schema and configures internal stuff
   const server = new ApolloServer({
-    context: { ...accountsGraphQL.context, ...driver },
+    context: accountsGraphQL.context,
     schema,
     introspection: true,
     playground: true

@@ -8,7 +8,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 
-const type = [ 'Inside', 'Outside' ]
+const type = ['Inside', 'Outside']
 
 const SalesDialog = ({ fullScreen, open, setDialogOpen }) => {
   const [values, setValues] = useState({

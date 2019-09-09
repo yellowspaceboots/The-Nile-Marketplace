@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
@@ -14,22 +13,57 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
 import WLogo from './WLogo'
 import AppRouter from './AppRouter'
 import ListItemLink from './ListItemLink'
 import { Link } from 'react-router-dom'
 import WidgetsIcon from '@material-ui/icons/Widgets'
 import SettingsIcon from '@material-ui/icons/Settings'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import initialState from './requests'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import HomeIcon from '@material-ui/icons/Home'
 import NestedNavigation from './NestedNavigation'
+import { accountsClient } from '../client'
+import SearchIcon from '@material-ui/icons/Search'
+import InputBase from '@material-ui/core/InputBase'
+import { useApolloClient } from '@apollo/react-hooks'
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
+import Badge from '@material-ui/core/Badge'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Fade from '@material-ui/core/Fade'
+import Avatar from '@material-ui/core/Avatar'
+import AlarmIcon from '@material-ui/icons/Alarm'
+import AssignmentLateIcon from '@material-ui/icons/AssignmentLate'
+import AnnouncementIcon from '@material-ui/icons/Announcement'
+import moment from 'moment'
 
 const drawerWidth = 240
 
 const useStyles = makeStyles(theme => ({
+  avatar: {
+    margin: 10,
+    marginLeft: 0
+  },
+  blueAvatar: {
+    margin: 10,
+    marginLeft: 0,
+    color: '#fff',
+    backgroundColor: theme.palette.primary.main
+  },
+  yellowAvatar: {
+    margin: 10,
+    marginLeft: 0,
+    color: '#fff',
+    backgroundColor: theme.palette.secondary.main
+  },
+  greenAvatar: {
+    margin: 10,
+    marginLeft: 0,
+    color: '#fff',
+    backgroundColor: 'green'
+  },
   root: {
     display: 'flex',
     height: '100vh'
@@ -56,17 +90,70 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginLeft: 0,
+    marginRight: 10,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto'
+    }
+  },
+  searchIcon: {
+    width: theme.spacing(7),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputRoot: {
+    color: 'inherit'
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 7),
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 120,
+      '&:focus': {
+        width: 200
+      }
+    }
   }
 }))
 
-const Layout = (props) => {
+const Layout = ({ history, ...props }) => {
+  const myClient = useApolloClient()
   const { container } = props
   const classes = useStyles()
   const theme = useTheme()
   const openRequestCount = initialState.filter(request => request.status === 'Open' || request.status === 'Pending').length
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const notificationClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const notificationClose = () => {
+    setAnchorEl(null)
+  }
+  const open = Boolean(anchorEl)
   function handleDrawerToggle () {
     setMobileOpen(!mobileOpen)
+  }
+  const onLogout = async () => {
+    await accountsClient.logout()
+    history.push('/login')
+    myClient.resetStore()
   }
   const navPadding = 44
   const drawer = (
@@ -80,9 +167,9 @@ const Layout = (props) => {
           <NestedNavigation padding={navPadding} icon={<WidgetsIcon style={{ color: 'lightgrey' }} />} title='Commercial Projects'>
             <ListItemLink to='/commercial-projects/request-log'>
               <ListItemText style={{ paddingLeft: navPadding }} inset disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>Request Log</Typography>} />
-              <ListItemSecondaryAction style={{ zIndex: -1, backgroundColor: '#ffbb41', borderRadius: '50%', height: 20, minWidth: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant='caption' style={{ margin: 4 }}>{openRequestCount}</Typography>
-              </ListItemSecondaryAction>
+            </ListItemLink>
+            <ListItemLink to='/commercial-projects/calendar'>
+              <ListItemText style={{ paddingLeft: navPadding }} inset disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>Calendar</Typography>} />
             </ListItemLink>
             <ListItemLink to='/commercial-projects/material-status'>
               <ListItemText style={{ paddingLeft: navPadding }} inset disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>Material Status</Typography>} />
@@ -104,9 +191,7 @@ const Layout = (props) => {
         </List>
         <Divider style={{ color: 'white' }} />
         <List>
-          <ListItem button onClick={() => {
-            props.login(false)
-          }}>
+          <ListItem button onClick={() => onLogout()}>
             <ListItemIcon>{<Backspace style={{ color: 'lightgrey' }} />}</ListItemIcon>
             <ListItemText disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>Log Out</Typography>} />
           </ListItem>
@@ -131,10 +216,112 @@ const Layout = (props) => {
           <Link to='/'>
             <WLogo size={34} color='#1e3f76' borderColor='white' borderSize={4} containerStyle={{ margin: 15, marginLeft: 0 }} />
           </Link>
-          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 5 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 6, flexGrow: 1 }}>
             <Typography variant='h6' style={{ fontWeight: 700 }}>Wholesale Electric</Typography>
-            <Typography variant='overline' style={{ marginTop: -12 }}>Tools</Typography>
+            <Typography variant='overline' style={{ marginTop: -14 }}>Supply Company of Houston</Typography>
           </div>
+          <Hidden xsDown implementation='css'>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder='Search'
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          </Hidden>
+          <Hidden smUp implementation='css'>
+            <IconButton
+              color='inherit'
+              aria-label='search'
+              edge='start'
+            >
+              <SearchIcon />
+            </IconButton>
+          </Hidden>
+          <IconButton
+            color='inherit'
+            aria-label='Notifications'
+            edge='end'
+            onClick={notificationClick}
+          >
+            <Badge color='secondary' overlap='circle' variant='dot'>
+              <NotificationsNoneIcon />
+            </Badge>
+          </IconButton>
+          <Menu
+            id='fade-menu'
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={notificationClose}
+            TransitionComponent={Fade}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center'
+            }}
+          >
+            <Typography variant='body1' style={{ padding: 20, fontWeight: 700, width: 400 }}>Notifications</Typography>
+            <Divider />
+            <MenuItem onClick={notificationClose}>
+              <ListItemIcon>
+                <Avatar className={classes.yellowAvatar}>
+                  <AlarmIcon />
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText
+                disableTypography
+                primary={<Typography variant='body2'>Project Bidding Soon</Typography>}
+                secondary={<Typography color='textSecondary' variant='body2'>{moment(new Date()).fromNow()}</Typography>}
+              />
+            </MenuItem>
+            <MenuItem onClick={notificationClose}>
+              <ListItemIcon>
+                <Avatar className={classes.blueAvatar}>
+                  <AssignmentLateIcon />
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText
+                disableTypography
+                primary={<Typography variant='body2'>New Project Added</Typography>}
+                secondary={<Typography color='textSecondary' variant='body2'>{moment(new Date()).fromNow()}</Typography>}
+              />
+            </MenuItem>
+            <MenuItem onClick={notificationClose}>
+              <ListItemIcon>
+                <Avatar className={classes.greenAvatar}>
+                  <AnnouncementIcon />
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText
+                disableTypography
+                primary={<Typography variant='body2'>New Message for Project</Typography>}
+                secondary={<Typography color='textSecondary' variant='body2'>{moment(new Date()).fromNow()}</Typography>}
+              />
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={notificationClose}>
+              <ListItemIcon>
+                <Avatar className={classes.avatar}>
+                  <NotificationsNoneIcon />
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText
+                disableTypography
+                primary={<Typography variant='body2'>See All Notifications</Typography>}
+              />
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
@@ -185,12 +372,6 @@ const Layout = (props) => {
       </main>
     </div>
   )
-}
-
-Layout.propTypes = {
-  // Injected by the documentation to work in an iframe.
-  // You won't need it on your project.
-  container: PropTypes.object
 }
 
 export default Layout

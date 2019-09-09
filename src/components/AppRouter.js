@@ -7,6 +7,7 @@ import MaterialStatus from './MaterialStatus'
 import EndOfMonth from './EndOfMonth'
 import Profile from './Profile'
 import Account from './Account'
+import ProjectsCalendar from './ProjectsCalendar'
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,11 @@ const AppRouter = () => {
         exact
         path='/commercial-projects/request-log'
         render={(props) => <RequestLog {...props} title='Request Log' />}
+      />
+      <Route
+        exact
+        path='/commercial-projects/calendar'
+        render={(props) => <ProjectsCalendar {...props} title={`Project's Calendar`} />}
       />
       <Route
         exact

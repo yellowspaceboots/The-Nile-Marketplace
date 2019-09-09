@@ -12,10 +12,29 @@ import { KeyboardDatePicker, KeyboardDateTimePicker } from '@material-ui/pickers
 import salesmen from './salesmen'
 import customers from './customers'
 import NumberFormat from 'react-number-format'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
+import MultiSelect from './MultiSelect'
 
-const size = [ 'Large', 'Medium', 'Small' ]
+const ADD_EVENT = gql`
+  mutation AddEvent($event: EventInput!) {
+    addEvent(event: $event) {
+      _id
+      requestId
+      title
+      start
+      end
+      salesman
+      amount
+      status
+      customers
+    }
+  }
+`
 
-const status = [ 'Pending', 'Open', 'Won', 'Lost' ]
+const size = ['Large', 'Medium', 'Small']
+
+const status = ['Pending', 'Open', 'Won', 'Lost']
 
 const NumberFormatCustom = (props) => {
   const { inputRef, onChange, ...other } = props
@@ -37,24 +56,30 @@ const NumberFormatCustom = (props) => {
   )
 }
 
-const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
+const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
   const initialValuesState = event || {
-    project: '',
-    customer: '',
+    title: '',
+    customers: null,
     amount: '',
     size: '',
     status: '',
     salesman: ''
   }
   const initialDateState = {
-    received: new Date(),
-    due: new Date()
+    start: new Date(),
+    end: new Date()
   }
   const [values, setValues] = useState(initialValuesState)
   const [dateValues, setDateValues] = useState(initialDateState)
+  const [multi, setMulti] = useState(null)
+
+  function handleChangeMulti (value) {
+    setMulti(value)
+  }
   const resetFormState = () => {
     setValues(initialValuesState)
     setDateValues(initialDateState)
+    setMulti(null)
   }
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value })
@@ -62,6 +87,21 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
   const handleDateChange = (name, value) => {
     setDateValues({ ...dateValues, [name]: value })
   }
+  const [addEvent, { data }] = useMutation(ADD_EVENT, {
+    refetchQueries: ['getRequestsQuery']
+  })
+  const customerNoKeyAccount = customers.filter(customer => customer.keyAccountId === 'UNDEFINED')
+  const customerByKeyAccount = new Set(customers.filter(customer => customer.keyAccountId !== 'UNDEFINED').map(customer => customer.keyAccountId))
+  const keyAccounts = [...customerByKeyAccount].map(keyAccountId => {
+    const myCustomer = customers.filter(customer => customer.keyAccountId === keyAccountId)[0]
+    return myCustomer
+  })
+  const finalCustomerList = [...customerNoKeyAccount, ...keyAccounts].sort((a, b) => a.name.localeCompare(b.name))
+  const finalCustomerListForSelect = finalCustomerList.map(customer => ({
+    ...customer,
+    value: customer.account,
+    label: customer.name
+  }))
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -75,28 +115,18 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
           id='outlined-name'
           autoComplete='off'
           label='Project Name'
-          value={values.project}
-          onChange={handleChange('project')}
+          value={values.title}
+          onChange={handleChange('title')}
           margin='normal'
           fullWidth
           variant='outlined'
         />
-        <TextField
-          id='outlined-select-currency'
-          select
-          label='Customer Name'
-          fullWidth
-          value={values.customer}
-          onChange={handleChange('customer')}
-          margin='normal'
-          variant='outlined'
-        >
-          {customers.map(option => (
-            <MenuItem key={option.account} value={option.account}>
-              {option.name}
-            </MenuItem>
-          ))}
-        </TextField>
+        <MultiSelect
+          label='Customers'
+          suggestions={finalCustomerListForSelect}
+          multi={multi}
+          handleChangeMulti={handleChangeMulti}
+        />
         <TextField
           id='outlined-select-currency'
           select
@@ -120,7 +150,7 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
           animateYearScrolling
           inputVariant='outlined'
           margin='normal'
-          onChange={date => handleDateChange('received', date)}
+          onChange={date => handleDateChange('start', date)}
           format='ll'
         />
         <KeyboardDateTimePicker
@@ -128,7 +158,7 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
           inputVariant='outlined'
           animateYearScrolling
           value={dateValues.due}
-          onChange={date => handleDateChange('due', date)}
+          onChange={date => handleDateChange('end', date)}
           showTodayButton
           disablePast
           format='lll'
@@ -184,7 +214,15 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, addEvent, event }) => {
         <Button
           color='primary' autoFocus
           onClick={() => {
-            addEvent({ ...values, ...dateValues })
+            addEvent({
+              variables: {
+                event: {
+                  ...values,
+                  ...dateValues,
+                  amount: parseInt(parseFloat(values.amount) * 100),
+                  customers: multi.map(customer => customer.name)
+                }
+              } })
             resetFormState()
             setDialogOpen(false)
           }}

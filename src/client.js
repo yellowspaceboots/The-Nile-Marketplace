@@ -37,8 +37,6 @@ const client = new ApolloClient({
 
 const accountsGraphQL = new GraphQLClient({ graphQLClient: client })
 const accountsClient = new AccountsClient({}, accountsGraphQL)
-const accountsPassword = new AccountsClientPassword(accountsClient, {
-  hashPassword: (password) => password
-})
+const accountsPassword = new AccountsClientPassword(accountsClient, {})
 
 export { client, accountsPassword, accountsGraphQL, accountsClient }
