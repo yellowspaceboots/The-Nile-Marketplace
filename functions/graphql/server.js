@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const dbUrl = process.env.DB_URL_DEV
+const dbUrl = process.env.DB_URL
 
 const dbOptions = {
   useNewUrlParser: true,
