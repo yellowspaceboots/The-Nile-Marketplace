@@ -47,19 +47,20 @@ const AuthenticatedApp = withRouter(({ history }) => {
       }
     }
   }
+  console.log(user)
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    <Switch>
-      <Route
-        exact
-        path='/login'
-        render={(props) => <Splash {...props} />}
-      />
-      <Route
-        path='/'
-        render={(props) => <Layout {...props} />}
-      />
-    </Switch>
+      <Switch>
+        <Route
+          exact
+          path='/login'
+          render={(props) => <Splash {...props} />}
+        />
+        <Route
+          path='/'
+          render={(props) => <Layout {...props} />}
+        />
+      </Switch>
     </Suspense>
   )
 })

@@ -5,7 +5,8 @@ const dbUrl = process.env.DB_URL
 const dbOptions = {
   useNewUrlParser: true,
   useFindAndModify: false,
-  dbName: 'Elysium'
+  dbName: 'Elysium',
+  useUnifiedTopology: true
 }
 // Set DB from mongoose connection
 mongoose.connect(dbUrl, dbOptions)
