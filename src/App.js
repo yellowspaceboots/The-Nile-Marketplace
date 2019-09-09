@@ -33,6 +33,7 @@ const AuthenticatedApp = withRouter(({ history }) => {
   const [user, setUser] = useState()
   useEffect(() => {
     fetchUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const fetchUser = async () => {
     // refresh the session to get a new accessToken if expired
@@ -47,19 +48,20 @@ const AuthenticatedApp = withRouter(({ history }) => {
       }
     }
   }
+  console.log(user)
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    <Switch>
-      <Route
-        exact
-        path='/login'
-        render={(props) => <Splash {...props} />}
-      />
-      <Route
-        path='/'
-        render={(props) => <Layout {...props} />}
-      />
-    </Switch>
+      <Switch>
+        <Route
+          exact
+          path='/login'
+          render={(props) => <Splash {...props} />}
+        />
+        <Route
+          path='/'
+          render={(props) => <Layout {...props} />}
+        />
+      </Switch>
     </Suspense>
   )
 })
