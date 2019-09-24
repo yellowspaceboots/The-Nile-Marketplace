@@ -170,7 +170,6 @@ const salesmen = [
     name: 'Victoria House Account',
     type: 'Outside'
   }
-
 ]
 
 export default salesmen

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -10,11 +9,12 @@ import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import { KeyboardDatePicker, KeyboardDateTimePicker } from '@material-ui/pickers'
 import salesmen from './salesmen'
-import customers from './customers'
 import NumberFormat from 'react-number-format'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import MultiSelect from './MultiSelect'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
 
 const ADD_EVENT = gql`
   mutation AddEvent($event: EventInput!) {
@@ -27,13 +27,17 @@ const ADD_EVENT = gql`
       salesman
       amount
       status
-      customers
+      customers {
+        account
+        salesmanNumber
+        keyAccountId
+        name
+      }
     }
   }
 `
 
 const size = ['Large', 'Medium', 'Small']
-
 const status = ['Pending', 'Open', 'Won', 'Lost']
 
 const NumberFormatCustom = (props) => {
@@ -56,13 +60,13 @@ const NumberFormatCustom = (props) => {
   )
 }
 
-const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
-  const initialValuesState = event || {
+const LogDialog = ({ fullScreen, open, setDialogOpen, customers }) => {
+  const initialValuesState = {
     title: '',
     customers: null,
     amount: '',
     size: '',
-    status: '',
+    status: 'Open',
     salesman: ''
   }
   const initialDateState = {
@@ -72,20 +76,24 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
   const [values, setValues] = useState(initialValuesState)
   const [dateValues, setDateValues] = useState(initialDateState)
   const [multi, setMulti] = useState(null)
-
+  const [checkError, setCheckError] = useState('')
+  const [creatingRequest, setCreatingRequest] = useState(false)
   function handleChangeMulti (value) {
     setMulti(value)
-  }
-  const resetFormState = () => {
-    setValues(initialValuesState)
-    setDateValues(initialDateState)
-    setMulti(null)
   }
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value })
   }
   const handleDateChange = (name, value) => {
     setDateValues({ ...dateValues, [name]: value })
+  }
+  const handleClose = () => {
+    setCreatingRequest(false)
+    setValues(initialValuesState)
+    setDateValues(initialDateState)
+    setMulti(null)
+    setCheckError('')
+    setDialogOpen(false)
   }
   const [addEvent] = useMutation(ADD_EVENT, {
     refetchQueries: ['getRequestsQuery']
@@ -102,13 +110,42 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
     value: customer.account,
     label: customer.name
   }))
+  const handleCreateRequest = () => {
+    setCheckError('')
+    const check = Object.values({
+      ...values,
+      ...dateValues,
+      amount: parseInt(parseFloat(values.amount) * 100),
+      customers: multi
+    }).filter(property => !property).length > 0
+    if (!check) {
+      const customerInput = multi.map(customer => ({
+        name: customer.name,
+        account: customer.account,
+        salesmanNumber: customer.salesmanNumber,
+        keyAccountId: customer.keyAccountId
+      }))
+      addEvent({
+        variables: {
+          event: {
+            ...values,
+            ...dateValues,
+            amount: parseInt(parseFloat(values.amount) * 100),
+            customers: customerInput
+          }
+        }
+      })
+      handleClose()
+    } else { setCheckError('All fields are required.') }
+  }
   return (
     <Dialog
       fullScreen={fullScreen}
       open={open}
-      onClose={() => setDialogOpen(false)}
+      onClose={handleClose}
       aria-labelledby='responsive-dialog-title'
     >
+      {creatingRequest && <LinearProgress color='secondary' style={{ position: 'absolute', top: 0, left: 0, width: '100%' }} />}
       <DialogTitle id='responsive-dialog-title'>{'Log a New Incoming Request'}</DialogTitle>
       <DialogContent>
         <TextField
@@ -209,41 +246,21 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, event }) => {
             </MenuItem>
           ))}
         </TextField>
+        {checkError && <Typography color='error'>{checkError}</Typography>}
       </DialogContent>
       <DialogActions>
         <Button
           color='primary' autoFocus
-          onClick={() => {
-            addEvent({
-              variables: {
-                event: {
-                  ...values,
-                  ...dateValues,
-                  amount: parseInt(parseFloat(values.amount) * 100),
-                  customers: multi.map(customer => customer.name)
-                }
-              } })
-            resetFormState()
-            setDialogOpen(false)
-          }}
+          onClick={handleCreateRequest}
         >
             Submit
         </Button>
-        <Button
-          onClick={() => {
-            resetFormState()
-            setDialogOpen(false)
-          }}
-          color='primary'>
+        <Button onClick={handleClose} color='primary'>
             Cancel
         </Button>
       </DialogActions>
     </Dialog>
   )
-}
-
-LogDialog.propTypes = {
-  fullScreen: PropTypes.bool.isRequired
 }
 
 export default withMobileDialog()(LogDialog)

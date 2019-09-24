@@ -16,6 +16,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import { safelyGetNestedValue } from './utils'
 
 const GET_REQUESTS = gql`
   query getRequestsQuery {
@@ -28,30 +29,51 @@ const GET_REQUESTS = gql`
       salesman
       amount
       status
-      customers
+      customers {
+        account
+        salesmanNumber
+        keyAccountId
+        name
+      }
+    }
+  }
+`
+
+const GET_CUSTOMERS = gql`
+  query getCustomersQuery {
+    getCustomers {
+      _id
+      account
+      salesmanNumber
+      keyAccountId
+      name
     }
   }
 `
 
 const RequestLog = ({ title }) => {
-  // const [view, switchView] = useState(false)
+  // const [view, switchView] = useState(false) safelyGetNestedValue(['idw', 'text', 'catalogDesc', 'value'], ddsGetProductData)
   const [logDialogOpen, setLogDialogOpen] = useState(false)
   const [filter, toggleFilter] = useState(false)
   const [salesDialogOpen, setSalesDialogOpen] = useState(false)
-  const { loading, data, error } = useQuery(GET_REQUESTS)
+  const { loading: requestLoading, data: requestData, error: requestError } = useQuery(GET_REQUESTS)
+  const { loading: customersLoading, data: customerData, error: customerError } = useQuery(GET_CUSTOMERS)
+  const loading = requestLoading || customersLoading
+  const error = [requestError, customerError].filter(error => error)
   if (loading) { return <CircularProgress /> }
-  if (error) { return <div>Error! {error.message}</div> }
-  const getRequests = data.getRequests
+  if (error.length > 0) { return error.map(error => <div key={error.message}>Error! {error.message}</div>) }
+  const getRequests = safelyGetNestedValue(['getRequests'], requestData)
+  const getCustomers = customerData.getCustomers
   return (
     <React.Fragment>
-      <LogDialog open={logDialogOpen} setDialogOpen={setLogDialogOpen} addEvent={() => console.log('placeholder')} />
+      <LogDialog customers={getCustomers} open={logDialogOpen} setDialogOpen={setLogDialogOpen} />
       <SalesDialog open={salesDialogOpen} setDialogOpen={setSalesDialogOpen} />
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>
         {title}
       </Typography>
       <div style={{ display: 'flex', marginBottom: 12, alignItems: 'flex-end' }}>
         <div style={{ display: 'flex', flexGrow: 1, alignItems: 'flex-end' }}>
-          <Typography variant='subtitle1' style={{ fontWeight: 600 }}>Showing {getRequests.length} Projects</Typography>
+          <Typography variant='subtitle1' style={{ fontWeight: 600 }}>Showing {getRequests ? getRequests.length : 0} Projects</Typography>
         </div>
         <Button style={{ marginRight: 12 }} onClick={() => setLogDialogOpen(true)}>
           New Request
@@ -75,8 +97,8 @@ const RequestLog = ({ title }) => {
         </div>
         <Divider style={{ marginBottom: 12 }} />
       </Collapse>
-      <Grid container spacing={2}>
-        {getRequests.map(event => <EventCard key={event._id} event={event} setLogDialogOpen={setLogDialogOpen} />)}
+      <Grid container spacing={4}>
+        {getRequests && getRequests.map(event => <EventCard key={event._id} event={event} salesmen={salesmen} />)}
       </Grid>
     </React.Fragment>
   )

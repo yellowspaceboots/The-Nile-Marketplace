@@ -187,6 +187,9 @@ const Layout = ({ history, ...props }) => {
             <ListItemLink to='/settings/account'>
               <ListItemText style={{ paddingLeft: navPadding }} inset disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>Account Settings</Typography>} />
             </ListItemLink>
+            <ListItemLink to='/settings/users'>
+              <ListItemText style={{ paddingLeft: navPadding }} inset disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>User Management</Typography>} />
+            </ListItemLink>
           </NestedNavigation>
         </List>
         <Divider style={{ color: 'white' }} />

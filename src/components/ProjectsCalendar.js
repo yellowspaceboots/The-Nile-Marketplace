@@ -18,7 +18,12 @@ const GET_REQUESTS = gql`
       salesman
       amount
       status
-      customers
+      customers {
+        account
+        salesmanNumber
+        keyAccountId
+        name
+      }
     }
   }
 `
@@ -38,6 +43,7 @@ const ProjectsCalendar = props => {
         <Calendar
           localizer={localizer}
           events={requestsWithDate}
+          onSelectEvent={event => props.history.push(`/commercial-projects/request-log/${event._id}`)}
           startAccessor='end'
           endAccessor='end'
         />

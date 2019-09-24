@@ -7,6 +7,7 @@ import MaterialStatus from './MaterialStatus'
 import EndOfMonth from './EndOfMonth'
 import Profile from './Profile'
 import Account from './Account'
+import Users from './Users'
 import ProjectsCalendar from './ProjectsCalendar'
 
 const AppRouter = () => {
@@ -51,6 +52,11 @@ const AppRouter = () => {
         exact
         path='/settings/account'
         render={(props) => <Account {...props} title='Account' />}
+      />
+      <Route
+        exact
+        path='/settings/users'
+        render={(props) => <Users {...props} title='User Management' />}
       />
     </Switch>
   )

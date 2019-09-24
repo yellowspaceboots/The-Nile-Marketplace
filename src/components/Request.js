@@ -19,7 +19,12 @@ const GET_REQUEST = gql`
       salesman
       amount
       status
-      customers
+      customers {
+        account
+        salesmanNumber
+        keyAccountId
+        name
+      }
     }
   }
 `
@@ -48,7 +53,7 @@ const Request = ({ title, match, ...props }) => {
             <Typography color='textSecondary' gutterBottom>
           Customer List
             </Typography>
-            {getRequest.customers.map(customer => <Typography key={customer} variant='h5' component='h2'>{customer}</Typography>)}
+            {getRequest.customers.map(customer => <Typography key={customer.account} variant='h5' component='h2'>{customer.name}</Typography>)}
           </CardContent>
         </Card>
       </div>
