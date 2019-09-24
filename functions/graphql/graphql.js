@@ -2354,13 +2354,20 @@ const run = async function (event, context) {
   const Customers = db.model('Customers')
   const Salesmen = db.model('Salesmen')
 
-  // const customerCheck = await Customers.find({})
-  const salesmanCheck = await Salesmen.find({})
-  /*
+  const customerCheck = await Customers.find({})
+  // const salesmanCheck = await Salesmen.find({})
+ 
   if (customerCheck.length <= 0) {
     customers.map(function (customer) {
       const NewCustomer = new Customers(customer)
       NewCustomer.save()
+    })
+  }
+ /*  
+  if (salesmanCheck.length <= 0) {
+    salesmen.map(function (salesman) {
+      const NewSalesman = new Salesmen(salesman)
+      NewSalesman.save()
     })
   }
 */
