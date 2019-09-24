@@ -1,7 +1,7 @@
 import React from 'react'
 
 const WLogo = ({ size, color, containerStyle, borderColor, borderSize }) => (
-  <React.Fragment>
+  <>
     {borderColor ? (
       <div style={{ ...containerStyle, display: 'flex', justifyContent: 'center', alignItems: 'center', height: size + borderSize || 0, width: size + borderSize || 0, backgroundColor: borderColor, borderRadius: '50%' }}>
         <svg viewBox='0 0 9050 9050' height={size} width={size}>
@@ -19,7 +19,7 @@ const WLogo = ({ size, color, containerStyle, borderColor, borderSize }) => (
         </svg>
       </div>
     )}
-  </React.Fragment>
+  </>
 )
 
 export default WLogo

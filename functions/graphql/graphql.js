@@ -75,12 +75,12 @@ const run = async function (event, context) {
 
   const Requests = db.model('Requests')
   const Customers = db.model('Customers')
- // const Salesmen = db.model('Salesmen')
-  
- /*  
+  // const Salesmen = db.model('Salesmen')
+
+  /*
   const customerCheck = await Customers.find({})
   const salesmanCheck = await Salesmen.find({})
- 
+
   if (customerCheck.length <= 0) {
     customers.map(function (customer) {
       const NewCustomer = new Customers(customer)
@@ -187,8 +187,7 @@ const run = async function (event, context) {
         return Requests.find({}).limit(10).sort([['start', -1]])
       },
       getCustomers: async function () {
-        const CustomerList = await Customers.find({})
-        return CustomerList
+        return Customers.find({})
       },
       publicField: function () {
         return 'public'

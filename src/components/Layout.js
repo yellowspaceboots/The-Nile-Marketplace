@@ -157,7 +157,7 @@ const Layout = ({ history, ...props }) => {
   }
   const navPadding = 44
   const drawer = (
-    <React.Fragment>
+    <>
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, backgroundColor: theme.palette.primary }}>
         <List style={{ padding: 15, marginTop: 75, flex: 1 }} subheader={<Typography variant='overline' style={{ color: 'lightgrey', fontWeight: 600, marginLeft: 18, marginBottom: 10 }}>Navigation</Typography>}>
           <ListItemLink to='/'>
@@ -200,7 +200,7 @@ const Layout = ({ history, ...props }) => {
           </ListItem>
         </List>
       </div>
-    </React.Fragment>
+    </>
   )
   return (
     <div className={classes.root}>

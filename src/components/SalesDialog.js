@@ -26,7 +26,7 @@ const SalesDialog = ({ fullScreen, open, setDialogOpen }) => {
       onClose={() => setDialogOpen(false)}
       aria-labelledby='responsive-dialog-title'
     >
-      <DialogTitle id='responsive-dialog-title'>{'Add New Salesman'}</DialogTitle>
+      <DialogTitle id='responsive-dialog-title'>Add New Salesman</DialogTitle>
       <DialogContent>
         <TextField
           id='outlined-name'

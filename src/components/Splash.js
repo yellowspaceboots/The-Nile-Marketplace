@@ -54,7 +54,7 @@ const Splash = ({ history }) => {
   const classes = useStyles()
   console.log(user)
   return (
-    <React.Fragment>
+    <>
       {logginIn && <LinearProgress color='secondary' style={{ position: 'absolute', top: 0, left: 0, width: '100%' }} />}
       <Grid container component='main' className={classes.root}>
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -135,7 +135,7 @@ const Splash = ({ history }) => {
           </div>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 }
 

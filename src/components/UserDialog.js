@@ -60,7 +60,7 @@ const UserDialog = ({ fullScreen, open, setDialogOpen }) => {
       aria-labelledby='responsive-dialog-title'
     >
       {creatingUser && <LinearProgress color='secondary' style={{ position: 'absolute', top: 0, left: 0, width: '100%' }} />}
-      <DialogTitle id='responsive-dialog-title'>{'Add New User'}</DialogTitle>
+      <DialogTitle id='responsive-dialog-title'>Add New User</DialogTitle>
       <DialogContent>
         <TextField
           variant='outlined'
@@ -111,7 +111,8 @@ const UserDialog = ({ fullScreen, open, setDialogOpen }) => {
       <DialogActions>
         <Button
           color='primary'
-          onClick={() => createUser()}>
+          onClick={() => createUser()}
+        >
             Submit
         </Button>
         <Button onClick={handleClose} color='primary' autoFocus>

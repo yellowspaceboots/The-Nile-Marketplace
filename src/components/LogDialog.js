@@ -146,7 +146,7 @@ const LogDialog = ({ fullScreen, open, setDialogOpen, customers }) => {
       aria-labelledby='responsive-dialog-title'
     >
       {creatingRequest && <LinearProgress color='secondary' style={{ position: 'absolute', top: 0, left: 0, width: '100%' }} />}
-      <DialogTitle id='responsive-dialog-title'>{'Log a New Incoming Request'}</DialogTitle>
+      <DialogTitle id='responsive-dialog-title'>Log a New Incoming Request</DialogTitle>
       <DialogContent>
         <TextField
           id='outlined-name'

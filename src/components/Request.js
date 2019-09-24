@@ -36,7 +36,7 @@ const Request = ({ title, match, ...props }) => {
   if (error) { return <div>Error! {error.message}</div> }
   const getRequest = data.getRequest
   return (
-    <React.Fragment>
+    <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant='overline' color='textSecondary' style={{ marginRight: 10, fontWeight: 600 }}>
           {title} {getRequest.requestId}
@@ -58,7 +58,7 @@ const Request = ({ title, match, ...props }) => {
         </Card>
       </div>
 
-    </React.Fragment>
+    </>
   )
 }
 

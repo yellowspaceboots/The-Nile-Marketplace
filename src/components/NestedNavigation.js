@@ -12,7 +12,7 @@ const NestedNavigation = ({ icon, padding, title, children }) => {
   const [open, setOpen] = useState(false)
   const fontSize = 16
   return (
-    <React.Fragment>
+    <>
       <ListItem button onClick={() => setOpen(!open)}>
         <ListItemIcon style={{ minWidth: padding }}>{icon}</ListItemIcon>
         <ListItemText disableTypography primary={<Typography variant='body2' style={{ color: 'lightgrey' }}>{title}</Typography>} />
@@ -23,7 +23,7 @@ const NestedNavigation = ({ icon, padding, title, children }) => {
           {children}
         </List>
       </Collapse>
-    </React.Fragment>
+    </>
   )
 }
 

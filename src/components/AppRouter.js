@@ -26,7 +26,7 @@ const AppRouter = () => {
       <Route
         exact
         path='/commercial-projects/calendar'
-        render={(props) => <ProjectsCalendar {...props} title={`Project's Calendar`} />}
+        render={(props) => <ProjectsCalendar {...props} title={'Project\'s Calendar'} />}
       />
       <Route
         exact

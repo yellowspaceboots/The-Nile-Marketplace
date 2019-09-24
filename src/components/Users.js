@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 const Users = ({ title, ...props }) => {
   const [userDialogOpen, setUserDialogOpen] = useState(false)
   return (
-    <React.Fragment>
+    <>
       <UserDialog open={userDialogOpen} setDialogOpen={setUserDialogOpen} />
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>
         {title}
@@ -19,7 +19,7 @@ const Users = ({ title, ...props }) => {
           New User
         </Button>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 

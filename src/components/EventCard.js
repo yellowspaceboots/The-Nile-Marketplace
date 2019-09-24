@@ -25,44 +25,45 @@ const EventCard = ({ event, salesmen }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card style={{ height: '100%', position: 'relative', overflow: 'visible', minHeight: 140 }}>
-      <CardActionArea component={renderLink} style={{ height: '100%' }}>
+        <CardActionArea component={renderLink} style={{ height: '100%' }}>
           <CardHeader
             action={
               <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                 <Typography variant='overline' align='right' style={{ color: statusColor, flexGrow: 1, fontWeight: 900 }}>
                   {event.status}
                 </Typography>
-                <div style={{ display: 'flex'}}>
-                  <div style={{ flexGrow: 1}} />
+                <div style={{ display: 'flex' }}>
+                  <div style={{ flexGrow: 1 }} />
                   <Divider style={{ padding: 2, backgroundColor: statusColor, marginTop: -4, marginBottom: 4, width: 80 }} />
                 </div>
                 <NumberFormat
                   value={event.amount / 100}
-                  displayType={'text'}
+                  displayType='text'
                   thousandSeparator
                   fixedDecimalScale
                   decimalScale={2}
-                  prefix={'$'}
+                  prefix='$'
                   renderText={
-                  value => (
-                    <Typography align='right' variant='subtitle1'>
-                      {value}
-                    </Typography>
-                  )}
+                    value => (
+                      <Typography align='right' variant='subtitle1'>
+                        {value}
+                      </Typography>
+                  )
+                  }
                 />
                 <Typography variant='subtitle1' align='right' noWrap style={{ marginTop: -4, marginBottom: -4 }}>{event.salesman}</Typography>
                 <Typography variant='h6' noWrap align='right' style={{ fontWeight: 900 }}>{moment(event.end).format('h:mm A')}</Typography>
               </div>
             }
             title={
-                <Typography variant='subtitle1' aria-label='title'>
-                  {event.title}
-                </Typography>
+              <Typography variant='subtitle1' aria-label='title'>
+                {event.title}
+              </Typography>
             }
           />
           <CardContent style={{ paddingTop: 0 }}>
             <div>
-            <Typography variant='body2' color='textSecondary' component='p'>
+              <Typography variant='body2' color='textSecondary' component='p'>
                 {`request#: ${requestId}`}
               </Typography>
               <Typography variant='body2' color='textSecondary' component='p'>
@@ -78,16 +79,18 @@ const EventCard = ({ event, salesmen }) => {
                   const salesmanArr = salesmen.filter(salesman => salesman.number === customer.salesmanNumber)
                   const salesman = safelyGetNestedValue([0, 'name'], salesmanArr)
                   return (
-                  <StatusChip
-                    label={customer.name + ' - ' + salesman}
-                    status={event.status}
-                    style={{ marginRight: 6, marginBottom: 6 }}
-                  />
-                )})}
+                    <StatusChip
+                      key={customer._id}
+                      label={customer.name + ' - ' + salesman}
+                      status={event.status}
+                      style={{ marginRight: 6, marginBottom: 6 }}
+                    />
+                  )
+                })}
               </div>
             </div>
-          </CardContent>        
-      </CardActionArea>
+          </CardContent>
+        </CardActionArea>
 
       </Card>
     </Grid>

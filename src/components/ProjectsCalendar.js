@@ -35,7 +35,7 @@ const ProjectsCalendar = props => {
   if (loading) { return <CircularProgress /> }
   const requestsWithDate = data.getRequests.map(event => ({ ...event, end: new Date(event.end), title: `Bid due for ${event.title}` }))
   return (
-    <React.Fragment>
+    <>
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>
         {props.title}
       </Typography>
@@ -48,7 +48,7 @@ const ProjectsCalendar = props => {
           endAccessor='end'
         />
       </div>
-    </React.Fragment>
+    </>
   )
 }
 

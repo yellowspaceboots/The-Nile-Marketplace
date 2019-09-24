@@ -65,7 +65,7 @@ const RequestLog = ({ title }) => {
   const getRequests = safelyGetNestedValue(['getRequests'], requestData)
   const getCustomers = customerData.getCustomers
   return (
-    <React.Fragment>
+    <>
       <LogDialog customers={getCustomers} open={logDialogOpen} setDialogOpen={setLogDialogOpen} />
       <SalesDialog open={salesDialogOpen} setDialogOpen={setSalesDialogOpen} />
       <Typography variant='overline' color='textSecondary' style={{ marginBottom: 30, fontWeight: 600 }}>
@@ -100,7 +100,7 @@ const RequestLog = ({ title }) => {
       <Grid container spacing={4}>
         {getRequests && getRequests.map(event => <EventCard key={event._id} event={event} salesmen={salesmen} />)}
       </Grid>
-    </React.Fragment>
+    </>
   )
 }
 
